@@ -1,0 +1,124 @@
+########
+#
+# Example Makefile
+#
+# Directory: sample\src\hpgl
+#
+########
+
+########
+#
+# Variable assignments
+#
+########
+
+# Medium memory model
+MODEL = M
+INCLUDES = -I..
+
+########
+#
+# VPATH and vpath statements
+#
+# The VPATH statement applies to all files regardless of name.
+# The vpath directive applies only to files matching a certain pattern.
+#
+########
+
+# All source files are in the directory above
+vpath %.h ..;[\cccm\mkdemodb|DEV]\src\hpgl
+vpath %.c [\cccm\mkdemodb|DEV]\src\hpgl
+vpath %.obj ..
+
+# The equivalent of the three vpath statements using the VPATH would be
+# VPATH = ..;[\cccm\mkdemodb|DEV]\src\hpgl
+
+########
+#
+# This statement selects a production build or a debug build based on the
+# command line variable assignment of DEBUG.  
+# 
+# Because of the way this statement is set up, the default is a production
+# build.
+#
+########
+
+ifeq ($(DEBUG),yes)
+  # debug mode
+  # Note that CFLAGS is used included in implicit .c rules
+  CFLAGS = /Zi /A$(MODEL) $(INCLUDES)
+  LFLAGS = /CO
+else
+  # production mode
+  # Note that CFLAGS is used included in implicit .c rules
+  CFLAGS = /A$(MODEL) $(INCLUDES)
+  LFLAGS =
+endif
+
+########
+# 
+# These are all the objects we use
+#
+########
+
+OBJS = changesi.obj circle.obj hpgl2ps.obj dxycom.obj end_draw.obj     \
+       getopt.obj getval.obj hpglcom.obj linesize.obj linetype.obj    \
+       manualfe.obj plotcoor.obj plotdot.obj plotinit.obj plotps.obj  \
+       ps_macro.obj rectangl.obj textps.obj tick.obj userdefc.obj     \
+       viewport.obj 
+
+SRCS = changesi.c circle.c hpgl2ps.c dxycom.c end_draw.c     \
+       getopt.c getval.c hpglcom.c linesize.c linetype.c    \
+       manualfe.c plotcoor.c plotdot.c plotinit.c plotps.c  \
+       ps_macro.c rectangl.c textps.c tick.c userdefc.c     \
+       viewport.c
+
+########
+#
+# These are all the build rules for targets that don't have an applicable
+# implicit rule.  
+#
+# All .obj targets have an implicit .c to .obj rule.
+#
+########
+
+# The .PHONY statement tells cmake that there is no action for this
+# target.
+# The target "all" is the first target in the makefile and therefore will be
+# the target this is built if no target is given on the cmake command line.
+.PHONY: all clean
+all:	hpgl2ps.exe
+
+# The symbol $^ represents the dependencies of the target.
+# The symbol $@ represents the target name.
+hpgl2ps.exe: $(OBJS)
+	$(LINK) $(LFLAGS) $^, hpgl2ps.exe ;
+
+# This target removes all the targets so everything will be rebuilt from
+# scratch
+clean:	
+	del *.obj 
+	del hpgl2ps.exe
+
+########
+#
+# Dependencies
+#
+# These are very important for database access.  If the .h files are not 
+# included in the dependencies, they will never be exported from the 
+# database.
+#
+# It is not necessary to include standard includes (stdio.h, malloc.h, etc.) 
+# in the dependencies because they will never be checked into the database 
+# and should never change.
+#
+########
+
+hpgl2ps.obj   : hpgl2ps.c ext.h
+
+########
+#
+# End of File
+#
+########
+

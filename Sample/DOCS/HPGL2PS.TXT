@@ -1,0 +1,112 @@
+
+HPGL2PS((1L))     MISC. REFERENCE MANUAL PAGES      HPGL2PS((1L))
+
+
+
+NAME
+     hpgl2ps - A HP  (Hewlet  Packard)  plot  command  filter  to
+     PostScript
+
+SYNOPSIS
+     hpgl2ps [-AB43mr] [-l line sizes] [-s scale] [-x offset] [-y
+     offset]  [-h  font  height multiplier] [-w font width multi-
+     plier] [plotfile]
+
+DESCRIPTION
+     This filter  is  used  to  convert  Hewlet  Packard  Graphic
+     Language  (HP-GL)  7550A plotter commands to PostScript. The
+     HP-GL commands are a subset of the  Roland  plotter  command
+     set (RD-GL).
+
+     The default conditions for hpgl2ps are:
+
+     A.   The plot translation is from an ANSI A (8.5  x  11inch)
+          plot to ANSI A paper on the LaserWriter.  See below for
+          other paper sizes.
+
+     B.   Line thicknesses are in millimeters and are  for  lines
+          (pens)  1  to  9:  ( 0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 1.0,
+          1.25, 1.5 )
+
+     C.   The default font is Helvetica, 14 point on  the  Laser-
+          writer.
+
+     D.   The default font height and width multipliers  are  1.2
+          and 3.6 respectively.
+
+     Note:
+          If the plotfile is not specified then standard input is
+          assumed.
+
+ARGUMENTS
+     -A   Draw for an ANSI A (11 x 8.5inch) plot.
+
+     -B   Draw for an ANSI B (17 x 11inch) plot.
+
+     -4   Draw for an A4 ISO (297mm x 210mm) plot. This will give
+          an aproximate 1:1 translation to the LaserWriter.
+
+     -3   Draw for an A3 ISO (420mm x 297mm) plot.
+
+     -l line sizes
+          This  option  allows  the  default  line  sizes  to  be
+          replaced  with different sizes starting from line (pen)
+          one through nine. The new sizes (real or  integer)  are
+          entered in a comma seperated string (line size) and are
+          in millimeters. Only the sizes entered  in  the  string
+          will  be  changed  with  respect to lines (pens) one to
+          nine while nonentered line (pen) sizes will retain  the
+          default sizes.
+
+          In the following example only  the  first  three  sizes
+          will be changed.
+
+          eg: hpgl2ps -l 0.4,0.3,1 file | lpr -Plaser1
+
+     -m   Enable the manual feed on the LaserWriter (cutoff  time
+          3 minutes).
+
+     -r   Rotate plot(s) through 90 degrees. (The  plot  is  made
+          smaller)
+
+     -s scale Scale the plot from 0.1 to 3 times its original
+          size.
+
+     -w relative font width multiplier  When the SR command
+          exists in the HP-GL file, the  size  of  characters  is
+          scaled  to  be  a  proportion  of the paper dimensions.
+          The HP7550 plotter character sizes are larger than  the
+          scaling  suggests.  The default value of the font width
+          multiplier scales the characters in the postscript file
+          to appear roughly the same width as the original.  Set-
+          ting to 1.0 reverts to the original scaling.
+
+     -w relative font height multiplier  When the SR command
+          exists in the HP-GL file, the  size  of  characters  is
+          scaled  to  be  a  proportion  of the paper dimensions.
+          The HP7550 plotter character sizes are larger than  the
+          scaling suggests.  The default value of the font height
+          multiplier scales the characters in the postscript file
+          to appear roughly the same width as the original.  Set-
+          ting to 1.0 reverts to the original scaling.
+
+     -x offset Place an X offset (in mm) in the plot.
+
+     -y offset Place an Y offset (in mm) in the plot.
+
+     Note: Offsets are with respect to the 0, 0 (origin)  of  the
+     HP-GL  /  RD-GL plotting commands, thus if the minimum plot-
+     ting coordinates are below either the X and/or Y  zero  axis
+     then a positive offset is applied.  Similarly if the minimum
+     plot coordinates are above the X and/or Y zero axis  then  a
+     negative offset is applied.
+
+
+
+BUGS
+     Some of the graphics commands are unimplemented and a  warn-
+     ing will be displayed. If this command is vital then it must
+     be written into the code.
+
+     No interactive command is suported.
+

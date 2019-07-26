@@ -1,0 +1,25 @@
+c:\tc\lib\c0l+
+hpgl2ps+
+changesi+
+circle+
+dxycom+
+end_draw+
+getopt+
+getval+
+hpglcom+
+linesize+
+linetype+
+manualfe+
+plotdot+
+plotinit+
+plotps+
+userdefc+
+ps_macro+
+rectangl+
+textps+
+viewport+
+plotcoor+
+tick
+hpgl2ps
+hpgl2ps
+c:\tc\lib\fp87 c:\tc\lib\mathl c:\tc\lib\cl

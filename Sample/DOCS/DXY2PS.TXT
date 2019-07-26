@@ -1,0 +1,82 @@
+
+DXY2PS((1L))      MISC. REFERENCE MANUAL PAGES       DXY2PS((1L))
+
+
+
+NAME
+     dxy2ps - A Roland DXY plot command filter to PostScript
+
+SYNOPSIS
+     dxy2ps [-amr] [-l line sizes] [-s  scale]  [-x  offset]  [-y
+     offset] [plotfile]
+
+DESCRIPTION
+     This filter is used to convert the Roland DXY and the Roland
+     Graphics Language (RD-GL) (which is a superset of the Hewlet
+     Packard Graphics Language (HP-GL)) commands to PostScript.
+
+     The RD-GL commands are only operated on if each  command  is
+     prefixed with a "^", therfore if your plotfile only contains
+     HP-GL or RD-GL commands use the filter hpgl2ps.
+
+     The default conditions for dxy2ps are:
+
+     1.   The plot translation is from ISO A3 (420mm x 297mm)  to
+          ISO A4 (297mm x 210mm) on the LaserWriter.
+
+     2.   Line thicknesses are in millimeters and are  for  lines
+          (pens)  1  to  9:  ( 0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 1.0,
+          1.25, 1.5 )
+
+     Note:
+          If the plotfile is not specified then standard input is
+          assumed.
+
+ARGUMENTS
+     -a   Draw on an A4 ISO (297mm x 210mm) sheet of paper.  This
+          will  give  an aproximate 1:1 translation to the Laser-
+          Writer.
+
+     -l line sizes
+          This  option  allows  the  default  line  sizes  to  be
+          replaced  with different sizes starting from line (pen)
+          one through nine. The new sizes (real or  integer)  are
+          entered in a comma seperated string (line size) and are
+          in millimeters. Only the sizes entered  in  the  string
+          will  be  changed  with  respect to lines (pens) one to
+          nine while nonentered line (pen) sizes will retain  the
+          default sizes.
+
+          In the following example only  the  first  three  sizes
+          will be changed.
+
+          eg: dxy2ps -l 0.4,0.3,1 file | lpr -Plaser1
+
+     -m   Enable the manual feed on the LaserWriter (cutoff  time
+          3 minutes)
+
+     -r   Rotate plot(s) through 90 degrees. (The  plot  is  made
+          smaller)
+
+     -s scale Scale the plot from 0.1 to 3 times its original
+          size.
+
+     -x offset Place an X offset (in mm) in the plot.
+
+     -y offset Place an Y offset (in mm) in the plot.
+
+     Note: Offsets are with respect to the 0, 0 (origin)  of  the
+     HP-GL  /  RD-GL plotting commands, thus if the minimum plot-
+     ting coordinates are below either the X and/or Y  zero  axis
+     then a positive offset is applied.  Similarly if the minimum
+     plot coordinates are above the X and/or Y zero axis  then  a
+     negative offset is applied.
+
+
+BUGS
+     Some of the graphics commands are unimplemented and a  warn-
+     ing will be displayed. If this command is vital then it must
+     be written into the code.
+
+     No interactive command is suported.
+

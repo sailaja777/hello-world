@@ -1,0 +1,154 @@
+########
+#
+# Example Makefile
+#
+# Directory: sample\src
+#
+########
+
+########
+#
+# Variable assignments
+#
+########
+
+# Medium memory model
+MODEL = M
+
+########
+#
+# VPATH and vpath statements
+#
+# The VPATH variable applies to all files.
+# The vpath directive applies only to files matching a certain pattern.
+#
+########
+
+vpath %.h [\cccm\mkdemodb|DEV]\src
+vpath %.c [\cccm\mkdemodb|DEV]\src
+
+# The equivalent of the two vpath statements using the VPATH would be
+# VPATH = [\cccm\mkdemodb|DEV]\src
+
+########
+#
+# This statement selects a production build or a debug build based on the
+# command line variable assignment of DEBUG.  
+# 
+# Because of the way this statement is set up, the default is a production
+# build.
+#
+########
+
+ifeq ($(DEBUG),yes)
+  # debug mode
+  # Note that CFLAGS is used included in implicit .c rules
+  CFLAGS = /Zi /A$(MODEL)
+  LFLAGS = /CO
+else
+  # production mode
+  # Note that CFLAGS is used included in implicit .c rules
+  CFLAGS = /A$(MODEL)
+  LFLAGS =
+endif
+
+########
+# 
+# These are all the objects we use
+#
+########
+
+OBJS = changesi.obj circle.obj testps.obj dxycom.obj end_draw.obj     \
+       getopt.obj getval.obj hpglcom.obj linesize.obj linetype.obj    \
+       manualfe.obj plotcoor.obj plotdot.obj plotinit.obj plotps.obj  \
+       ps_macro.obj rectangl.obj textps.obj tick.obj userdefc.obj     \
+       viewport.obj 
+
+SRCS = changesi.c circle.c testps.c dxycom.c end_draw.c     \
+       getopt.c getval.c hpglcom.c linesize.c linetype.c    \
+       manualfe.c plotcoor.c plotdot.c plotinit.c plotps.c  \
+       ps_macro.c rectangl.c textps.c tick.c userdefc.c     \
+       viewport.c
+
+########
+#
+# These are all the build rules for targets that don't have an applicable
+# implicit rule.  
+#
+# All .obj targets have an implicit .c to .obj rule.
+#
+########
+
+# The .PHONY statement tells cmake that there is no action for this
+# target.
+# The target "all" is the first target in the makefile and therefore will be
+# the target this is built if no target is given on the cmake command line.
+.PHONY: all dxy hpgl clean
+all:	testps.exe dxy hpgl
+
+# The symbol $^ represents the dependencies of the target.
+# The symbol $@ represents the target name.
+testps.exe: $(OBJS)
+	$(LINK) $(LFLAGS) $^, $@ ;
+
+# Since no file called force will ever exist, this target is always made.
+dxy:	force
+	$(MAKE) -C dxy
+
+# Since no file called force will ever exist, this target is always made.
+hpgl:	force
+	$(MAKE) -C hpgl
+
+# This target removes all the targets so everything will be rebuilt from
+# scratch
+clean:	
+	del *.obj 
+	del testps.exe
+	$(MAKE) -C dxy clean
+	$(MAKE) -C hpgl clean
+
+########
+#
+# Dependencies
+#
+# These are very important for database access.  If the .h files are not 
+# included in the dependencies, they will never be exported from the 
+# database.
+#
+# It is not necessary to include standard includes (stdio.h, malloc.h, etc.) 
+# in the dependencies because they will never be checked into the database 
+# and should never change.
+#
+########
+
+changesi.obj : changesi.c defn.h 
+circle.obj   : circle.c defn.h
+testps.obj   : testps.c ext.h
+dxycom.obj   : dxycom.c defn.h
+end_draw.obj : end_draw.c defn.h
+getopt.obj   : getopt.c
+getval.obj   : getval.c defn.h
+hpglcom.obj  : hpglcom.c defn.h
+linesize.obj : linesize.c defn.h
+linetype.obj : linetype.c defn.h
+manualfe.obj : manualfe.c
+plotcoor.obj : plotcoor.c defn.h
+plotdot.obj  : plotdot.c defn.h
+plotinit.obj : plotinit.c defn.h
+plotps.obj   : plotps.c defn.h
+ps_macro.obj : ps_macro.c
+rectangl.obj : rectangl.c defn.h
+textps.obj   : textps.c defn.h
+tick.obj     : tick.c defn.h
+userdefc.obj : userdefc.c defn.h
+viewport.obj : viewport.c defn.h
+
+# This is a dummy dependency so that a PHONY target will always be out of date
+force:
+
+########
+#
+# End of File
+#
+########
+
