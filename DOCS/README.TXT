@@ -1,3 +1,4 @@
+//
 /*  hpgl2ps.pckd  -  enhanced  version  */  /*   hpgl2ps.ucb    -
 Further enhanced version */
 
